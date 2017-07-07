@@ -20,6 +20,10 @@ public class UserController {
         return null;
     }
 
+    User giveMeUserByNumber(int number) {
+        return userList.get(number);
+    }
+
     void saveUser() {
 
     }
@@ -27,5 +31,5 @@ public class UserController {
     void loadUser() {
 
     }
-    
+
 }
