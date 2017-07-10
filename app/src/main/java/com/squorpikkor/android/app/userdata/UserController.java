@@ -24,6 +24,22 @@ public class UserController {
         return userList.get(number);
     }
 
+    String giveMeAllUsers() {
+        String s = "";
+        for (User user : userList) {
+            s += " " + user.getName();
+        }
+        return s;
+    }
+
+    ArrayList<String> giveMeUserNameArray() {
+        ArrayList<String> list = new ArrayList<>();
+        for (User user : userList) {
+            list.add(user.getName());
+        }
+        return list;
+    }
+
     void saveUser() {
 
     }
