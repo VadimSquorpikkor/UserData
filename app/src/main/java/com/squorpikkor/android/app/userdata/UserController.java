@@ -8,7 +8,9 @@ public class UserController {
     private ArrayList<User> userList = new ArrayList<>();
 
     void createNewUser(String name) {
-        userList.add(new User(name));
+        if (!nameInList(name)) {
+            userList.add(new User(name));
+        }
     }
 
     User giveMeTheUser(String name) {
@@ -18,6 +20,13 @@ public class UserController {
             }
         }
         return null;
+    }
+
+    boolean nameInList(String name) {
+        for (User user : userList) {
+            if(user.getName().equals(name))return true;
+        }
+        return false;
     }
 
     User giveMeUserByNumber(int number) {
