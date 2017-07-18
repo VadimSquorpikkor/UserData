@@ -1,49 +1,52 @@
 package com.squorpikkor.android.app.userdata;
 
-// Created by VadimSquorpikkor on 14.07.2017.
+// Created by VadimSquorpikkor on 18.07.2017.
+
+import java.util.ArrayList;
 
 public class Order {
+    //Maybe it should be single ArrayList of parent class objects
+    private ArrayList<Juice> juiceList = new ArrayList<>();
+    private ArrayList<SomeStuff> someStuffList = new ArrayList<>();
 
-    private String name;
-    private double price;
-    private  int count;
-    private boolean isTaken;
+    private double orderPrice;
 
-    Order(String name) {
-        this.name = name;
+    public double getOrderPrice() {
+        return orderPrice;
     }
 
-    public String getName() {
-        return name;
+    public void setOrderPrice(double orderPrice) {
+        this.orderPrice = orderPrice;
     }
 
-    public void setName(String title) {
-        this.name = title;
+    void addJuiceToOrder(String name) {
+        juiceList.add(new Juice(name));
     }
 
-    public double getPrice() {
-        return price;
+    /*Juice getJuiceFromList() {
+        return juiceList.get
+    }*/
+
+    ArrayList<Juice> getJuiceList() {
+        return juiceList;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    void addSomeStuffToOrder(String name) {
+        someStuffList.add(new SomeStuff(name));
     }
 
-    public int getCount() {
-        return count;
+    ArrayList<SomeStuff> getSomeStuffList() {
+        return someStuffList;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    double howMuchIsTheOrder() {
+        double sum = 0;
+        for (Juice juice : juiceList) {
+            sum += juice.getPrice() * (double)juice.getCount();
+        }
+        for (SomeStuff someStuff : someStuffList) {
+            sum += someStuff.getPrice() * (double)someStuff.getCount();
+        }
+        return sum;
     }
-
-    public boolean isTaken() {
-        return isTaken;
-    }
-
-    public void setTaken(boolean taken) {
-        isTaken = taken;
-    }
-
-
 }
