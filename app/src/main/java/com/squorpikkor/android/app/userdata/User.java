@@ -7,12 +7,18 @@ import java.util.ArrayList;
 public class User {
     private String name;
     private double userMoneyLeft;
-    private ArrayList<SomeStuff> stuffList = new ArrayList<>();
-    private ArrayList<Juice> juiceList = new ArrayList<>();
-
+    //May be it should be "new order" there
+    //private ArrayList<SomeStuff> stuffList = new ArrayList<>();
+    //private ArrayList<Juice> juiceList = new ArrayList<>();
+    private Order userOrder;
 
     User(String name) {
         this.name = name;
+        userOrder = new Order();//create for new user new order
+    }
+
+    Order getOrder() {
+        return userOrder;
     }
 
     public String getName() {
@@ -31,25 +37,26 @@ public class User {
         this.userMoneyLeft = userMoneyLeft;
     }
 
-    void addNewSomeStuff(String name) {
-        stuffList.add(new SomeStuff(name));
-    }
 
-    void removeSomeStuff(String name) {
+//    void addNewSomeStuff(String name) {
+//        stuffList.add(new SomeStuff(name));
+//    }
+
+    /*void removeSomeStuff(String name) {
         for (SomeStuff someStuff : stuffList) {
             if(someStuff.getName().equals(name))stuffList.remove(someStuff);
         }
 
-    }
+    }*/
 
-    void addNewJuice(String name) {
+    /*void addNewJuice(String name) {
         juiceList.add(new Juice(name));
     }
-
-    void removeJuice(String name) {
+*/
+    /*void removeJuice(String name) {
         for (Juice juice : juiceList) {
             if(juice.getName().equals(name))juiceList.remove(juice);
         }
 
-    }
+    }*/
 }

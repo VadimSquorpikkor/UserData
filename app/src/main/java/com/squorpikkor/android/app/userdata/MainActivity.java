@@ -1,6 +1,8 @@
 package com.squorpikkor.android.app.userdata;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,30 @@ public class MainActivity extends AppCompatActivity {
     EditText mNewUserInput, mShowUser;
     UserController userController;
     ListView listView;
+    public static final String USER_NAME = "userName";
+    SharedPreferences preferences;
+
+
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Log.e("MyLog", "onPause: userListIs: " + userController.stringOfAllUser());
+        userController.saveUserList(preferences);//or use saveLoad class
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.e("MyLog", "onResume: userList BEFORE load: " + userController.stringOfAllUser());
+        userController.loadUserList(preferences);//or use saveLoad class
+        Log.e("MyLog", "onResume: userList AFTER load: " + userController.stringOfAllUser());
+        makeAdapter();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         Log.e("myLog", "onCreate");
 
         userController = new UserController();
+
+        preferences = getSharedPreferences("mainPref", Context.MODE_PRIVATE);
 
         mAddButton = (Button) findViewById(R.id.addButton);
         mReadButton = (Button) findViewById(R.id.readButton);
@@ -67,16 +95,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
+                sendIntentToUserInfoActivity(((TextView) view).getText().toString());
             }
         });
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                removeUser();
+                removeUser(((TextView) view).getText().toString());
                 return false;
             }
         });
+
+//        userController.loadUserList(preferences);
     }
 
     private void showToast(String text) {
@@ -92,20 +123,21 @@ public class MainActivity extends AppCompatActivity {
 
     void sendIntentToUserInfoActivity(String userName) {
         Intent intent = new Intent(this, UserInfoActivity.class);
-        intent.putExtra("userName", userName);
+        intent.putExtra(USER_NAME, userName);
         startActivity(intent);
     }
 
     void addNewUser() {
-        Log.e("myLog", "Button pressed");
+//        Log.e("myLog", "Button pressed");
         userController.createNewUser(mNewUserInput.getText().toString());
         mNewUserInput.setText("");
-        showToast("userAdded");
+//        showToast("userAdded");
         makeAdapter();
     }
 
-    void removeUser() {
-
+    void removeUser(String name) {
+        userController.removeCurrentUser(name);
+        makeAdapter();
     }
 
 }
