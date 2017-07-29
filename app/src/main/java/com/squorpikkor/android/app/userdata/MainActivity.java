@@ -15,8 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
 
     Button mAddButton, mReadButton;
@@ -24,27 +22,21 @@ public class MainActivity extends AppCompatActivity {
     UserController userController;
     ListView listView;
     public static final String USER_NAME = "userName";
-    SharedPreferences preferences;
-
-
-
 
     @Override
     protected void onPause() {
         super.onPause();
 
         Log.e("MyLog", "onPause: userListIs: " + userController.stringOfAllUser());
-        userController.saveUserList(preferences);//or use saveLoad class
-
+        userController.saveUserList();//or use saveLoad class
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Log.e("MyLog", "onResume: userList BEFORE load: " + userController.stringOfAllUser());
-        userController.loadUserList(preferences);//or use saveLoad class
-        Log.e("MyLog", "onResume: userList AFTER load: " + userController.stringOfAllUser());
+        Log.e("MyLog", "onResume: userListIs: " + userController.stringOfAllUser());
+        userController.loadUserList();
         makeAdapter();
     }
 
@@ -52,12 +44,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.e("myLog", "onCreate");
 
-        userController = new UserController();
-
-        preferences = getSharedPreferences("mainPref", Context.MODE_PRIVATE);
-
+        userController = new UserController(this);
         mAddButton = (Button) findViewById(R.id.addButton);
         mReadButton = (Button) findViewById(R.id.readButton);
         mNewUserInput = (EditText) findViewById(R.id.newUserInput);
@@ -76,11 +64,7 @@ public class MainActivity extends AppCompatActivity {
                         addNewUser();
                         break;
                     case R.id.readButton:
-                        //showUser
                         Log.e("myLog", "Read Pressed");
-//                        mShowUser.setText(userController.giveMeUserByNumber(Integer.parseInt(mShowUser.getText().toString())).getName());
-//                        mShowUser.setText("111111");
-//                        mShowUser.setText(userController.giveMeAllUsers());
                         makeAdapter();
                         //return name of the user with list number, equal of edit text
                         break;
@@ -107,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        userController.loadUserList(preferences);
     }
 
     private void showToast(String text) {
@@ -116,9 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     void makeAdapter() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, userController.giveMeUserNameArray());
-
         listView.setAdapter(adapter);
-
     }
 
     void sendIntentToUserInfoActivity(String userName) {
@@ -128,15 +109,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void addNewUser() {
-//        Log.e("myLog", "Button pressed");
-        userController.createNewUser(mNewUserInput.getText().toString());
+        userController.createUser(mNewUserInput.getText().toString());
         mNewUserInput.setText("");
-//        showToast("userAdded");
         makeAdapter();
     }
 
     void removeUser(String name) {
-        userController.removeCurrentUser(name);
+        userController.removeUser(name);
         makeAdapter();
     }
 

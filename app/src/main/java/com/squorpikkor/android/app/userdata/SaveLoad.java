@@ -2,17 +2,75 @@ package com.squorpikkor.android.app.userdata;
 
 // Created by VadimSquorpikkor on 24.07.2017.
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.EditText;
 
 import java.util.ArrayList;
 
-public class SaveLoad {
+class SaveLoad {
 
-    public static final String TAG = "LOG!";
+    private SharedPreferences sharedPreferences;
+    Context context;
 
-    void saveStringArray(ArrayList<String> stringList, SharedPreferences sPref) {
+    SaveLoad(Context context) {//Constructor to use shPref
+        this.context = context;
+        sharedPreferences = context.getSharedPreferences("mainPref", Context.MODE_PRIVATE);
+    }
+
+    private static final String TAG = "LOG!";
+
+    void saveUserListFromFile(ArrayList<User> userList) {
+        int count = 1;
+        SharedPreferences.Editor editor
+                = sharedPreferences.edit();
+        editor.clear();
+        for (User user : userList) {
+            editor.putString("setting" + count, user.getName());
+            count++;
+        }
+        editor.apply();
+    }
+
+    void loadUserListFromFile(ArrayList<User> userList) {
+        if (sharedPreferences != null) {
+            Log.e(TAG, "sPref NOT NULL!!!");
+            userList.clear();
+            Log.e(TAG, "loadUserListFromFile: USER LIST IS EMPTY!");
+
+            int count = 1;
+            while (sharedPreferences.contains("setting" + count)) {
+                userList.add(new User(sharedPreferences.getString("setting" + count, "")));
+                Log.e(TAG, "loadUserListFromFile: load user " + sharedPreferences.getString("setting" + count, ""));
+                count++;
+            }
+        } else {
+            Log.e("LOOGGG!", "loadUserListFromFile: sPref = NULL!!!");
+        }
+    }
+
+    //region OLD METHODS
+    ////////////////////////////////////////////////////////////////
+
+    /*void removeUserFromFile(String name) {
+
+    }*/
+
+    /*ArrayList<User> giveMeUserListFromFile() {
+        ArrayList<User> list = new ArrayList<>();
+        if (sharedPreferences != null) {
+            int count = 1;
+            while (sharedPreferences.contains("setting" + count)) {
+                list.add(new User(sharedPreferences.getString("setting" + count, "")));
+                count++;
+            }
+        } else {
+            Log.e("LOOGGG!", "loadUserListFromFile: sPref = NULL!!!");
+        }
+        return list;
+    }*/
+
+    /*void saveStringArray(ArrayList<String> stringList, SharedPreferences sPref) {
         int count = 1;
         SharedPreferences.Editor editor = sPref.edit();
         for (String s : stringList) {
@@ -29,34 +87,6 @@ public class SaveLoad {
             stringList.add("setting" + count);
             count++;
         }
-    }
-
-    void saveUserList(ArrayList<User> userList, SharedPreferences sPref) {
-        int count = 1;
-        SharedPreferences.Editor editor
-                = sPref.edit();
-        for (User user : userList) {
-            editor.putString("setting" + count, user.getName());
-            count++;
-        }
-        editor.apply();
-    }
-
-    void loadUserList(ArrayList<User> userList, SharedPreferences sPref) {
-        if (sPref != null) {
-            Log.e(TAG, "sPref NOT NULL!!!");
-            userList.clear();
-            if (userList.isEmpty()) {
-                Log.e(TAG, "loadUserList: USER LIST IS EMPTY!");
-            }
-            int count = 1;
-            while (sPref.contains("setting" + count)) {
-                userList.add(new User(sPref.getString("setting" + count, "")));
-                Log.e(TAG, "loadUserList: " + sPref.getString("setting" + count, ""));
-                count++;
-            }
-        } else {
-            Log.e("LOOGGG!", "loadUserList: sPref = NULL!!!");
-        }
-    }
+    }*/
+    //endregion
 }
