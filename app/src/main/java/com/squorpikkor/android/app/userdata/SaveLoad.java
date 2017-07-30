@@ -7,11 +7,14 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 class SaveLoad {
 
     private SharedPreferences sharedPreferences;
     Context context;
+
+    private HashMap<String, SharedPreferences> userPrefList = new HashMap<>();
 
     SaveLoad(Context context) {//Constructor to use shPref
         this.context = context;
@@ -20,10 +23,9 @@ class SaveLoad {
 
     private static final String TAG = "LOG!";
 
-    void saveUserListFromFile(ArrayList<User> userList) {
+    void saveUserListToFile(ArrayList<User> userList) {
         int count = 1;
-        SharedPreferences.Editor editor
-                = sharedPreferences.edit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         for (User user : userList) {
             editor.putString("setting" + count, user.getName());
@@ -34,20 +36,44 @@ class SaveLoad {
 
     void loadUserListFromFile(ArrayList<User> userList) {
         if (sharedPreferences != null) {
-            Log.e(TAG, "sPref NOT NULL!!!");
             userList.clear();
-            Log.e(TAG, "loadUserListFromFile: USER LIST IS EMPTY!");
-
             int count = 1;
             while (sharedPreferences.contains("setting" + count)) {
-                userList.add(new User(sharedPreferences.getString("setting" + count, "")));
-                Log.e(TAG, "loadUserListFromFile: load user " + sharedPreferences.getString("setting" + count, ""));
+                String name = sharedPreferences.getString("setting" + count, "");
+                userList.add(new User(name));
                 count++;
             }
         } else {
             Log.e("LOOGGG!", "loadUserListFromFile: sPref = NULL!!!");
         }
     }
+
+    void createUserFile(String nameOfPref) {
+        userPrefList.put(nameOfPref, (context.getSharedPreferences(nameOfPref, Context.MODE_PRIVATE)));
+    }
+
+    void saveUserFile(String nameOfPref, ArrayList<String> variableList) {
+        SharedPreferences.Editor editor = userPrefList.get(nameOfPref).edit();
+        for (String vName : variableList) {
+            editor.putString(vName, "");
+        }
+        editor.apply();
+    }
+
+    ArrayList<String> loadUserFile(String userName, ArrayList<String> variableList) {
+        ArrayList<String> list = new ArrayList<>();
+        for (String vName : variableList) {
+            String value = userPrefList.get(userName).getString(vName, "");//From HashMap "userPrefList" it takes preference for user with name "userName"
+            list.add(value);            //and from its preference get value with key "vName". Than add this value to ArrayList which returned by method
+        }
+        return list;
+    }
+
+    void removeUserFile(String name) {
+        userPrefList.get(name).edit().clear().apply();//It should be deleting a FILE, not only clear it and remove from list!
+        userPrefList.remove(name);
+    }
+
 
     //region OLD METHODS
     ////////////////////////////////////////////////////////////////

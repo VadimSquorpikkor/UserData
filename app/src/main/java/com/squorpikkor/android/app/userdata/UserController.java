@@ -3,7 +3,6 @@ package com.squorpikkor.android.app.userdata;
 // Created by VadimSquorpikkor on 05.07.2017.
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -59,11 +58,23 @@ class UserController {
     }
 
     void saveUserList() {
-        saveLoad.saveUserListFromFile(userList);
+        saveLoad.saveUserListToFile(userList);
     }
 
     void loadUserList() {
         saveLoad.loadUserListFromFile(userList);
+    }
+
+    void saveUser(String name) {
+
+    }
+
+    void loadUser() {
+
+    }
+
+    void removeUser() {
+
     }
 
     //region OLD METHODS

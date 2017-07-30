@@ -8,15 +8,10 @@ public class Order {
     //Maybe it should be single ArrayList of parent class objects
     private ArrayList<Juice> juiceList = new ArrayList<>();
     private ArrayList<SomeStuff> someStuffList = new ArrayList<>();
+    private String orderName;
 
-    private double orderPrice;
-
-    public double getOrderPrice() {
-        return orderPrice;
-    }
-
-    public void setOrderPrice(double orderPrice) {
-        this.orderPrice = orderPrice;
+    Order(String name) {
+        orderName = name;
     }
 
     void addJuiceToOrder(String name) {
@@ -49,4 +44,16 @@ public class Order {
         }
         return sum;
     }
+
+    /////////////////////////////////////////////////////////////
+
+    /*private double orderPrice;
+
+    public double getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(double orderPrice) {
+        this.orderPrice = orderPrice;
+    }*/
 }

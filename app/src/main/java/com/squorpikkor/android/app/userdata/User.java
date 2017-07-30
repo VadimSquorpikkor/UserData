@@ -14,7 +14,19 @@ public class User {
 
     User(String name) {
         this.name = name;
-        userOrder = new Order();//create for new user new order
+        userOrder = new Order(name);//create for new user new order
+    }
+
+    ArrayList<String> getAllVar() {//May be do it with HashMap?
+        ArrayList<String> list = new ArrayList<>();
+        list.add(name);
+        list.add(String.valueOf(userMoneyLeft));
+        return list;
+    }
+
+    void setAllVar(ArrayList<String> list) {
+        name = list.get(0);
+        userMoneyLeft = Double.parseDouble(list.get(1));
     }
 
     Order getOrder() {
