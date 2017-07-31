@@ -54,20 +54,33 @@ class SaveLoad {
 
     void saveUserFile(String nameOfPref, ArrayList<String> variableList) {
         SharedPreferences.Editor editor = userPrefList.get(nameOfPref).edit();
-        for (String vName : variableList) {
-            editor.putString(vName, "");
+        int count = 0;
+        for (String var : variableList) {
+            editor.putString("count" + count, var);
+            count++;
         }
         editor.apply();
     }
 
     ArrayList<String> loadUserFile(String userName, ArrayList<String> variableList) {
         ArrayList<String> list = new ArrayList<>();
+        int count = 0;
+        while (userPrefList.get(userName).contains("count" + count)) {
+            String value = userPrefList.get(userName).getString("count" + count, "");//From HashMap "userPrefList" it takes preference for user with name "userName"
+            list.add(value);            //and from its preference get value with key ""count"+count". Than add this value to ArrayList which returned by method
+            count++;
+        }
+        return list;
+    }
+
+    /*ArrayList<String> loadUserFile(String userName, ArrayList<String> variableList) {
+        ArrayList<String> list = new ArrayList<>();
         for (String vName : variableList) {
             String value = userPrefList.get(userName).getString(vName, "");//From HashMap "userPrefList" it takes preference for user with name "userName"
             list.add(value);            //and from its preference get value with key "vName". Than add this value to ArrayList which returned by method
         }
         return list;
-    }
+    }*/
 
     void removeUserFile(String name) {
         userPrefList.get(name).edit().clear().apply();//It should be deleting a FILE, not only clear it and remove from list!
